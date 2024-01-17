@@ -44,12 +44,3 @@ func main() {
 	field(array)
 	fmt.Print("\n", cell_counter(array, 2, 1))
 }
-
-// res += array[y][x+1]
-// res += array[y][x-1]
-// res += array[y+1][x]
-// res += array[y-1][x]
-// res += array[y-1][x-1]
-// res += array[y-1][x+1]
-// res += array[y+1][x-1]
-// res += array[y+1][x+1]
