@@ -1,12 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"os"
+	"strings"
+)
 
 // Поле
 func field(array [][]int) {
 	for i := 0; i < len(array); i++ {
 		fmt.Print("\n")
-		for j := 0; j < len(array); j++ {
+		for j := 0; j < len(array[i]); j++ {
 			if array[i][j] == 0 {
 				fmt.Print(" ")
 			} else {
@@ -66,13 +71,102 @@ func predel(array [][]int, y, x int) int {
 	}
 	return 0
 }
-func main() {
-	array := [][]int{
-		{0, 1, 0},
-		{0, 1, 0},
-		{0, 1, 0},
+
+// Считывание длины файла
+func lenght(stroka string) int {
+	line := strings.Split(stroka, "\n")
+	max := 0
+	for i := 0; i < len(line); i++ {
+		if max < len(line[i]) {
+			max = len(line[i])
+		}
 	}
-	field(array)
-	// array = livedead(array)
-	// field(array)
+	return max
+}
+
+// Считывание высоты файла
+func height(stroka string) int {
+	line := strings.Split(stroka, "\n")
+	y := len(line)
+	return y
+}
+
+// Создание 2-мерного массива
+func array_2d(y, x int) [][]int {
+	array := [][]int{}
+	for i := 0; i < y; i++ {
+		arrayi := []int{}
+		for j := 0; j < x; j++ {
+			arrayi = append(arrayi, 0)
+		}
+		array = append(array, arrayi)
+	}
+	return array
+}
+
+func add_value(array [][]int, file string) [][]int {
+	spFile := strings.Split(file, "\n")
+
+	for i := 0; i < len(spFile); i++ {
+		lens := spFile[i]
+		for j := 0; j < len(lens); j++ {
+			if lens[j] == 42 {
+				array[i][j] = 1
+			}
+		}
+	}
+	return array
+}
+
+// Считывание файла
+func readfile(file string) [][]int {
+
+	x := lenght(file)
+	y := height(file)
+
+	array := array_2d(y, x)
+
+	array = add_value(array, file)
+
+	return array
+}
+
+func argument2() string {
+	args1 := os.Args[2:]
+	file := ""
+
+	for i := 0; i < len(args1); i++ {
+		figura, err := os.ReadFile(args1[i])
+		if err != nil {
+			return err.Error()
+		}
+		file += string(figura)
+	}
+
+	return file
+}
+
+func argument1(num int) int {
+
+	flag.IntVar(&num, "num", 0, "num use")
+
+	flag.Parse()
+
+	return num
+}
+
+func gLife(array [][]int, cycle_num int) {
+	for i := 0; i < cycle_num; i++ {
+		field(array)
+		array = livedead(array)
+	}
+
+}
+
+func main() {
+	num := 0
+	num = argument1(num)
+	figura := argument2()
+	array := readfile(figura)
+	gLife(array, num)
 }
